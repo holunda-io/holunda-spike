@@ -6,3 +6,6 @@ logging:
           container: WARN
           engine:
             persistence: WARN
+camunda:
+  bpm:
+    history-level: FULL
