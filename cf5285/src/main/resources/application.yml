@@ -1,0 +1,8 @@
+logging:
+  level:
+    org:
+      camunda:
+        bpm:
+          container: WARN
+          engine:
+            persistence: WARN
