@@ -2,26 +2,39 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <modules>
-        <module>cf5285</module>
-    </modules>
+  <modelVersion>4.0.0</modelVersion>
+  <modules>
+    <module>cf5285</module>
+    <module>dynamic-call-activity</module>
+  </modules>
 
-    <parent>
-        <groupId>io.toolisticon.maven</groupId>
-        <artifactId>maven-oss-parent</artifactId>
-        <version>0.4</version>
-        <relativePath/>
-    </parent>
+  <parent>
+    <groupId>io.toolisticon.maven</groupId>
+    <artifactId>maven-oss-parent</artifactId>
+    <version>0.6.3</version>
+    <relativePath/>
+  </parent>
 
-    <groupId>io.holunda.spike</groupId>
-    <artifactId>holunda-spike-root</artifactId>
-    <version>1.0-SNAPSHOT</version>
-    <packaging>pom</packaging>
+  <groupId>io.holunda.spike</groupId>
+  <artifactId>holunda-spike-root</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
 
-    <properties>
-        <project.github.organization>holunda</project.github.organization>
-        <project.github.repository>holunda-spike</project.github.repository>
-    </properties>
+  <properties>
+    <project.github.organization>holunda</project.github.organization>
+    <project.github.repository>holunda-spike</project.github.repository>
+
+    <camunda-custom-batch.version>1.1.0</camunda-custom-batch.version>
+    <camunda-springboot.version>2.3.0</camunda-springboot.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.16.18</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
 
 </project>

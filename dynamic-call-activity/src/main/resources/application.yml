@@ -1,0 +1,4 @@
+logging:
+  level:
+    org.camunda: warn
+    io.holunda: debug
