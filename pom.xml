@@ -4,8 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <modules>
-    <module>cf5285</module>
+    <!--<module>cf5285</module>-->
     <module>dynamic-call-activity</module>
+    <module>entry-criterion-repetition</module>
   </modules>
 
   <parent>
@@ -32,7 +33,7 @@
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.16.18</version>
+      <version>1.16.20</version>
       <scope>provided</scope>
     </dependency>
   </dependencies>

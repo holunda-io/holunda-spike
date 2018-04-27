@@ -2,28 +2,43 @@ package io.holunda.spike;
 
 
 import lombok.extern.slf4j.Slf4j;
+import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
-import org.camunda.bpm.engine.delegate.JavaDelegate;
+import org.camunda.bpm.engine.delegate.ExecutionListener;
+import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.variable.Variables;
 import org.camunda.bpm.model.bpmn.Bpmn;
 import org.camunda.bpm.model.bpmn.BpmnModelInstance;
 import org.camunda.bpm.spring.boot.starter.annotation.EnableProcessApplication;
 import org.camunda.bpm.spring.boot.starter.event.PostDeployEvent;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 
+import java.util.Arrays;
+import java.util.Random;
 import java.util.function.Function;
-import java.util.stream.Stream;
+
+import static org.camunda.bpm.engine.delegate.ExecutionListener.EVENTNAME_END;
 
 /**
- * Starts main process and determins called subprocess dynamically based on variable.
+ * Starts main process and determines called subprocess dynamically based on variable.
  */
 @SpringBootApplication
 @EnableProcessApplication
+@EnableScheduling
+@EnableAsync
 @Slf4j
 public class DynamicCallActivityApplication {
+
+  public static void main(String[] args) {
+    SpringApplication.run(DynamicCallActivityApplication.class, args);
+  }
 
   private static BpmnModelInstance MAIN = Bpmn.createExecutableProcess("main")
     .startEvent()
@@ -31,48 +46,63 @@ public class DynamicCallActivityApplication {
     .endEvent()
     .done();
 
-  private static BpmnModelInstance SUB1 = Bpmn.createExecutableProcess("sub1")
+  private static BpmnModelInstance SUB_GLOBAL = Bpmn.createExecutableProcess("subGlobal")
     .startEvent()
-    .serviceTask().camundaDelegateExpression("${sub1Delegate}")
+    .serviceTask().camundaDelegateExpression("${subGlobalDelegate}")
+    .endEvent().camundaExecutionListenerDelegateExpression(EVENTNAME_END, "${logMainEnd}")
+    .done();
+
+  private static BpmnModelInstance SUB_EXTERNAL = Bpmn.createExecutableProcess("subExternal")
+    .startEvent()
+    .serviceTask().camundaDelegateExpression("${subExternalDelegate}")
     .endEvent()
     .done();
 
-  private static BpmnModelInstance SUB2 = Bpmn.createExecutableProcess("sub2")
-    .startEvent()
-    .serviceTask().camundaDelegateExpression("${sub2Delegate}")
-    .endEvent()
-    .done();
 
+  private boolean ready = false;
 
-  public static void main(String[] args) {
-    SpringApplication.run(DynamicCallActivityApplication.class, args);
-  }
+  @Autowired
+  private RuntimeService runtimeService;
 
   @EventListener
   public void init(PostDeployEvent event) {
     event.getProcessEngine().getRepositoryService().createDeployment()
       .addModelInstance("main.bpmn", MAIN)
-      .addModelInstance("sub1.bpmn", SUB1)
-      .addModelInstance("sub2.bpmn", SUB2)
+      .addModelInstance("subGlobal.bpmn", SUB_GLOBAL)
+      .addModelInstance("subExternal.bpmn", SUB_EXTERNAL)
       .deploy();
 
-    Stream.of("sub1", "sub2").forEach(p -> event.getProcessEngine()
-      .getRuntimeService()
-      .startProcessInstanceByKey("main", Variables.putValue("subprocess", p)));
+   // ready = true;
+    startMainProcess("subExternal");
+
+  }
+
+   @Scheduled(fixedDelay = 2000L)
+  public void start() {
+    if (!ready) {
+      return;
+    }
+
+    String subProcess = Arrays.asList("subGlobal", "subExternal").get(new Random().nextInt(2));
+
+    ProcessInstance processInstance = startMainProcess(subProcess);
+    log.info("started subprocess[{}]: {}", subProcess, processInstance.getId());
+  }
+
+  private ProcessInstance startMainProcess(String subProcess) {
+    return runtimeService
+      .startProcessInstanceByKey("main", Variables.putValue("subProcess", subProcess));
   }
 
   @Bean
   public Function<DelegateExecution, String> determineSubProcess() {
-    return delegateExecution -> (String) delegateExecution.getVariable("subprocess");
+    return delegateExecution -> (String) delegateExecution.getVariable("subProcess");
   }
 
   @Bean
-  public JavaDelegate sub1Delegate() {
-    return execution -> log.info("executing subprocess 1 - {}", execution.getProcessInstanceId());
+  public ExecutionListener logMainEnd() {
+    return execution -> log.info("main ended with: {}", execution.getVariable("result"));
   }
 
-  @Bean
-  public JavaDelegate sub2Delegate() {
-    return execution -> log.info("executing subprocess 2 - {}", execution.getProcessInstanceId());
-  }
+
 }

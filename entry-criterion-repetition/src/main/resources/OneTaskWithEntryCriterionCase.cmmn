@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cmmn:definitions xmlns:dc="http://www.omg.org/spec/CMMN/20151109/DC" xmlns:cmmndi="http://www.omg.org/spec/CMMN/20151109/CMMNDI" xmlns:cmmn="http://www.omg.org/spec/CMMN/20151109/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/cmmn" id="Definitions_1uozq5s" targetNamespace="http://bpmn.io/schema/cmmn" exporter="Camunda Modeler" exporterVersion="1.13.1">
+  <cmmn:case id="OneTaskWithEntryCriterionCase">
+    <cmmn:casePlanModel id="CasePlanModel_1" name="A CasePlanModel">
+      <cmmn:planItem id="humanTask" name="DoStuff" definitionRef="HumanTask_0y1b1ge">
+        <cmmn:itemControl id="PlanItemControl_1na5ayg">
+          <cmmn:repetitionRule id="RepetitionRule_08pcyqp">
+            <cmmn:condition id="Expression_0ne0g8b">${true}</cmmn:condition>
+          </cmmn:repetitionRule>
+          <cmmn:manualActivationRule id="ManualActivationRule_00e59qr">
+            <cmmn:condition id="Expression_17kgtpc">${true}</cmmn:condition>
+          </cmmn:manualActivationRule>
+        </cmmn:itemControl>
+        <cmmn:entryCriterion id="EntryCriterion_0hag8aq" sentryRef="Sentry_0u5txnl" />
+      </cmmn:planItem>
+      <cmmn:sentry id="Sentry_0u5txnl">
+        <cmmn:ifPart id="IfPart_1ua4m50">
+          <cmmn:condition id="Expression_0ifeo2z">${entryCriterion.test(caseExecution, "humanTask")}</cmmn:condition>
+        </cmmn:ifPart>
+      </cmmn:sentry>
+      <cmmn:humanTask id="HumanTask_0y1b1ge">
+        <cmmn:extensionElements>
+          <camunda:caseExecutionListener event="complete" delegateExpression="${triggerSentryReEvaluationListener}" />
+        </cmmn:extensionElements>
+      </cmmn:humanTask>
+    </cmmn:casePlanModel>
+  </cmmn:case>
+  <cmmndi:CMMNDI>
+    <cmmndi:CMMNDiagram id="_5a66685b-5f57-4e2f-b1d1-acca4fae04b2">
+      <cmmndi:Size width="500" height="500" />
+      <cmmndi:CMMNShape id="DI_CasePlanModel_1" cmmnElementRef="CasePlanModel_1">
+        <dc:Bounds x="260" y="122" width="534" height="389" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="PlanItem_00a5vhd_di" cmmnElementRef="humanTask">
+        <dc:Bounds x="296" y="155" width="100" height="80" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="EntryCriterion_0hag8aq_di" cmmnElementRef="EntryCriterion_0hag8aq">
+        <dc:Bounds x="286" y="181" width="20" height="28" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNShape>
+    </cmmndi:CMMNDiagram>
+  </cmmndi:CMMNDI>
+</cmmn:definitions>
