@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/DMN/20151101/dmn.xsd" id="Definitions_1mthcs3" name="DRD" namespace="http://camunda.org/schema/1.0/dmn">
+  <decision id="table-definition" name="Table">
+    <decisionTable id="decisionTable_1" hitPolicy="COLLECT" aggregation="COUNT">
+      <input id="input_1" label="A">
+        <inputExpression id="inputExpression_1" typeRef="string">
+          <text>a</text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_16thip2" label="B">
+        <inputExpression id="LiteralExpression_0c0a8dk" typeRef="string">
+          <text>b</text>
+        </inputExpression>
+      </input>
+      <output id="output_1" typeRef="string" />
+      <rule id="DecisionRule_14b2dqx">
+        <inputEntry id="UnaryTests_1c9icax">
+          <text>"foo","bar"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1nj9txn">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0b9hv6b">
+          <text>"1"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0fx9v2b">
+        <inputEntry id="UnaryTests_0n545zx">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_14vf1b7">
+          <text>"foo","bar"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0gjyom5">
+          <text>"2"</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+</definitions>
