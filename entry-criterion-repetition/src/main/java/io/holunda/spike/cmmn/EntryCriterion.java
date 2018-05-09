@@ -5,7 +5,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.function.BiPredicate;
 
-import static io.holunda.spike.cmmn.config.RepetitionRule.WHEN_NOT_ENABLED_OR_ACTIVE;
+import static org.camunda.bpm.extension.cmmn.helper.RepetitionRule.WHEN_NOT_ENABLED_OR_ACTIVE;
+
 
 @Component
 public class EntryCriterion implements BiPredicate<DelegateCaseExecution, String> {

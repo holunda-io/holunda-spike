@@ -10,7 +10,7 @@
   </parent>
 
   <groupId>io.holunda.spike.cmmn</groupId>
-  <artifactId>entry-criterion-repetition</artifactId>
+  <artifactId>cmmn-state-control</artifactId>
 
   <properties>
     <springboot.version>1.5.12.RELEASE</springboot.version>
@@ -43,12 +43,10 @@
       <artifactId>camunda-bpm-spring-boot-starter</artifactId>
       <version>${camunda-springboot.version}</version>
     </dependency>
-
     <dependency>
       <groupId>org.camunda.bpm.extension.cmmn</groupId>
       <artifactId>camunda-bpm-cmmn-helper</artifactId>
     </dependency>
-
     <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>

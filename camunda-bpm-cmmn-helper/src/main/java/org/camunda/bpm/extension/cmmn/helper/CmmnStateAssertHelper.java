@@ -1,4 +1,4 @@
-package io.holunda.spike.cmmn;
+package org.camunda.bpm.extension.cmmn.helper;
 
 import lombok.RequiredArgsConstructor;
 import org.camunda.bpm.engine.HistoryService;

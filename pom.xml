@@ -8,6 +8,8 @@
     <module>dynamic-call-activity</module>
     <module>entry-criterion-repetition</module>
     <module>lazy-dmn-evaluation</module>
+    <module>cmmn-state-control</module>
+    <module>camunda-bpm-cmmn-helper</module>
   </modules>
 
   <parent>
@@ -29,6 +31,16 @@
     <camunda-custom-batch.version>1.1.0</camunda-custom-batch.version>
     <camunda-springboot.version>2.3.0</camunda-springboot.version>
   </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.camunda.bpm.extension.cmmn</groupId>
+        <artifactId>camunda-bpm-cmmn-helper</artifactId>
+        <version>1.0-SNAPSHOT</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
   <dependencies>
     <dependency>
