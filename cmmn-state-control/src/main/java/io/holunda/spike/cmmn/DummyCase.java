@@ -28,7 +28,7 @@ public class DummyCase {
 
   private final CaseService caseService;
 
-  public CaseInstance start(String businessKey) {
+  public CaseInstance start(final String businessKey) {
     return caseService.createCaseInstanceByKey(KEY, businessKey, Variables.putValue(BUSINESS_KEY, businessKey));
   }
 }

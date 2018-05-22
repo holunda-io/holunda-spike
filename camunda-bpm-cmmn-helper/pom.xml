@@ -12,7 +12,6 @@
   <groupId>org.camunda.bpm.extension.cmmn</groupId>
   <artifactId>camunda-bpm-cmmn-helper</artifactId>
 
-
   <dependencies>
     <dependency>
       <groupId>org.camunda.bpm</groupId>

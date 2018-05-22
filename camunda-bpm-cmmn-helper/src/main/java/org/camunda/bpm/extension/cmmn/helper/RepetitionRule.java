@@ -7,7 +7,7 @@ import org.camunda.bpm.engine.runtime.CaseExecution;
 import java.util.List;
 
 
-public enum RepetitionRule implements EntryCriterion {
+public enum RepetitionRule implements EntryCriterionPredicate {
   WHEN_NOT_ENABLED_OR_ACTIVE {
     @Override
     public boolean test(final DelegateCaseExecution execution, String activityId) {

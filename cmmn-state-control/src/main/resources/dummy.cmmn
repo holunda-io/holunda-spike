@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<cmmn:definitions xmlns:dc="http://www.omg.org/spec/CMMN/20151109/DC" xmlns:cmmndi="http://www.omg.org/spec/CMMN/20151109/CMMNDI" xmlns:cmmn="http://www.omg.org/spec/CMMN/20151109/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/cmmn" id="Definitions_17l7nw1" targetNamespace="http://bpmn.io/schema/cmmn" exporter="Camunda Modeler" exporterVersion="1.14.0">
+<cmmn:definitions xmlns:dc="http://www.omg.org/spec/CMMN/20151109/DC" xmlns:cmmndi="http://www.omg.org/spec/CMMN/20151109/CMMNDI" xmlns:cmmn="http://www.omg.org/spec/CMMN/20151109/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_17l7nw1" targetNamespace="http://bpmn.io/schema/cmmn" exporter="Camunda Modeler" exporterVersion="1.14.0">
   <cmmn:case id="dummy_case">
     <cmmn:casePlanModel id="dummy_case_id" name="Dummy Case">
-      <cmmn:extensionElements>
-        <camunda:variableListener event="update" delegateExpression="${reEvaluateState}" />
-      </cmmn:extensionElements>
+      <cmmn:extensionElements />
       <cmmn:planItem id="task1" name="Do task One" definitionRef="HumanTask_060e9xp">
         <cmmn:itemControl id="PlanItemControl_019e2si">
           <cmmn:repetitionRule id="RepetitionRule_1h2kgwn">

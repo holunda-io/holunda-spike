@@ -39,17 +39,23 @@ public class StateControlApplicationTest {
   private CmmnStateAssertHelper task1;
   private CmmnStateAssertHelper task2;
 
-
   private void startCase() {
     caseInstance = dummyCase.start("12345");
     task1 = new CmmnStateAssertHelper(historyService, TASK_1, caseInstance.getCaseInstanceId());
     task2 = new CmmnStateAssertHelper(historyService, TASK_2, caseInstance.getCaseInstanceId());
+  }
 
+  @Test
+  public void starts() {
+    // ok
   }
 
   @Test
   public void bothTasksAvailableAfterStart() {
     startCase();
+
+    //caseService.setVariable(caseInstance.getCaseInstanceId(), "foo", "bar");
+    //caseService.setVariable(caseInstance.getCaseInstanceId(), "foo", "bar1  ");
 
     assertThat(task1.get()).containsOnly(AVAILABLE);
     assertThat(task2.get()).containsOnly(AVAILABLE);

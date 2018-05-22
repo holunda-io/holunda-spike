@@ -4,5 +4,5 @@ import org.camunda.bpm.engine.delegate.DelegateCaseExecution;
 
 import java.util.function.BiPredicate;
 
-public interface EntryCriterion extends BiPredicate<DelegateCaseExecution, String> {
+public interface EntryCriterionPredicate extends BiPredicate<DelegateCaseExecution, String> {
 }

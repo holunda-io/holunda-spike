@@ -1,7 +1,7 @@
 package io.holunda.spike.cmmn;
 
 import org.camunda.bpm.engine.delegate.DelegateCaseExecution;
-import org.camunda.bpm.extension.cmmn.helper.EntryCriterion;
+import org.camunda.bpm.extension.cmmn.helper.EntryCriterionPredicate;
 import org.camunda.bpm.extension.cmmn.helper.RepetitionRule;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +13,7 @@ import static io.holunda.spike.cmmn.DummyCase.ACTIVITIES.TASK_1;
 import static io.holunda.spike.cmmn.DummyCase.ACTIVITIES.TASK_2;
 
 @Component("entry")
-public class DummyEntryCriterion implements EntryCriterion {
+public class DummyEntryCriterion implements EntryCriterionPredicate {
 
   private final Map<String,Boolean> enable = new HashMap<>();
 
