@@ -1,6 +1,7 @@
-package io.holunda.spike.cughh.bottlesofbeer;
+package io.holunda.spike.cughh.conditionstartevent;
 
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
@@ -15,11 +16,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import static com.google.common.util.concurrent.Uninterruptibles.sleepUninterruptibly;
-import static java.util.concurrent.TimeUnit.SECONDS;
 
 @SpringBootApplication
 @EnableProcessApplication
@@ -89,8 +86,9 @@ public class BeerOnTheWallApp {
       publishNumberOfBeers();
     }
 
+    @SneakyThrows
     private void publishNumberOfBeers() {
-      sleepUninterruptibly(2, SECONDS);
+      Thread.sleep(2000L);
       runtimeService.createConditionEvaluation()
         .setVariables(Variables.putValue("beers", this.beers.get()))
         .evaluateStartConditions();

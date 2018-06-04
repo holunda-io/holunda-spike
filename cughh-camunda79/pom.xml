@@ -3,14 +3,21 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
+
   <parent>
-    <artifactId>holunda-spike-root</artifactId>
     <groupId>io.holunda.spike</groupId>
+    <artifactId>holunda-spike-root</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
 
   <groupId>io.holunda.spike.cughh</groupId>
   <artifactId>cughh-camunda79</artifactId>
+  <packaging>pom</packaging>
+
+  <modules>
+    <module>condition-start-event</module>
+    <module>external-task</module>
+  </modules>
 
   <properties>
     <camunda.version>7.9.0-ee</camunda.version>
@@ -34,30 +41,27 @@
         <scope>import</scope>
         <type>pom</type>
       </dependency>
+
+      <dependency>
+        <groupId>org.camunda.bpm.springboot</groupId>
+        <artifactId>camunda-bpm-spring-boot-starter-webapp-ee</artifactId>
+        <version>${camunda-springboot.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.camunda.bpm.springboot</groupId>
+        <artifactId>camunda-bpm-spring-boot-starter-rest</artifactId>
+        <version>${camunda-springboot.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
   <dependencies>
     <dependency>
-      <groupId>org.camunda.bpm.springboot</groupId>
-      <artifactId>camunda-bpm-spring-boot-starter-webapp-ee</artifactId>
-      <version>${camunda-springboot.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>com.h2database</groupId>
-      <artifactId>h2</artifactId>
-      <scope>runtime</scope>
+      <groupId>io.holunda.spike.test</groupId>
+      <artifactId>holunda-test</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
-
-
-  <repositories>
-    <repository>
-      <id>camunda-bpm-ee</id>
-      <name>camunda-bpm-ee</name>
-      <url>https://app.camunda.com/nexus/content/repositories/camunda-bpm-ee</url>
-    </repository>
-  </repositories>
-
 </project>

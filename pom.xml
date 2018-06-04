@@ -3,12 +3,6 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <modules>
-    <!--<module>cf5285</module>-->
-    <module>dynamic-call-activity</module>
-    <module>lazy-dmn-evaluation</module>
-    <module>cughh-camunda79</module>
-  </modules>
 
   <parent>
     <groupId>io.toolisticon.maven</groupId>
@@ -22,25 +16,22 @@
   <version>1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
+  <modules>
+    <!--<module>cf5285</module>-->
+    <module>dynamic-call-activity</module>
+    <module>lazy-dmn-evaluation</module>
+    <module>cughh-camunda79</module>
+    <module>test</module>
+  </modules>
+
+
   <properties>
     <project.github.organization>holunda</project.github.organization>
     <project.github.repository>holunda-spike</project.github.repository>
 
     <camunda-custom-batch.version>1.1.0</camunda-custom-batch.version>
     <camunda-springboot.version>2.3.0</camunda-springboot.version>
-
-    <jgiven.version>0.16.0</jgiven.version>
   </properties>
-
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>org.camunda.bpm.extension.cmmn</groupId>
-        <artifactId>camunda-bpm-cmmn-helper</artifactId>
-        <version>1.0-SNAPSHOT</version>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
 
   <dependencies>
     <dependency>
@@ -50,24 +41,15 @@
       <scope>provided</scope>
     </dependency>
 
-    <dependency>
-      <groupId>com.tngtech.jgiven</groupId>
-      <artifactId>jgiven-junit</artifactId>
-      <version>${jgiven.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.tngtech.jgiven</groupId>
-      <artifactId>jgiven-spring</artifactId>
-      <version>${jgiven.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.tngtech.jgiven</groupId>
-      <artifactId>jgiven-html5-report</artifactId>
-      <version>${jgiven.version}</version>
-      <scope>test</scope>
-    </dependency>
   </dependencies>
+
+
+  <repositories>
+    <repository>
+      <id>camunda-bpm-ee</id>
+      <name>camunda-bpm-ee</name>
+      <url>https://app.camunda.com/nexus/content/repositories/camunda-bpm-ee</url>
+    </repository>
+  </repositories>
 
 </project>
