@@ -6,10 +6,8 @@
   <modules>
     <!--<module>cf5285</module>-->
     <module>dynamic-call-activity</module>
-    <module>entry-criterion-repetition</module>
     <module>lazy-dmn-evaluation</module>
-    <module>cmmn-state-control</module>
-    <module>camunda-bpm-cmmn-helper</module>
+    <module>cughh-camunda79</module>
   </modules>
 
   <parent>
@@ -30,6 +28,8 @@
 
     <camunda-custom-batch.version>1.1.0</camunda-custom-batch.version>
     <camunda-springboot.version>2.3.0</camunda-springboot.version>
+
+    <jgiven.version>0.16.0</jgiven.version>
   </properties>
 
   <dependencyManagement>
@@ -48,6 +48,25 @@
       <artifactId>lombok</artifactId>
       <version>1.16.20</version>
       <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.tngtech.jgiven</groupId>
+      <artifactId>jgiven-junit</artifactId>
+      <version>${jgiven.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.tngtech.jgiven</groupId>
+      <artifactId>jgiven-spring</artifactId>
+      <version>${jgiven.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.tngtech.jgiven</groupId>
+      <artifactId>jgiven-html5-report</artifactId>
+      <version>${jgiven.version}</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 

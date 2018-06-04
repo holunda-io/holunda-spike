@@ -17,3 +17,7 @@ buildNumber.properties
 .classpath
 .project
 .settings/
+
+
+*.mp4
+camunda-license.txt
