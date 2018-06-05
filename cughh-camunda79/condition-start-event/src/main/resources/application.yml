@@ -3,5 +3,3 @@ camunda:
     admin-user:
       id: admin
 
-server:
-  port: 9999

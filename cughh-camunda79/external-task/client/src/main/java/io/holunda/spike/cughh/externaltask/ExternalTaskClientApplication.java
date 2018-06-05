@@ -8,16 +8,13 @@ import org.camunda.bpm.client.ExternalTaskClient;
 import org.camunda.bpm.client.task.ExternalTaskHandler;
 import org.camunda.bpm.engine.variable.VariableMap;
 import org.camunda.bpm.engine.variable.Variables;
-import org.camunda.bpm.engine.variable.value.IntegerValue;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.SmartLifecycle;
 import org.springframework.context.annotation.Bean;
 
 import static java.lang.Math.pow;
-import static java.lang.Math.sqrt;
 import static org.camunda.bpm.engine.variable.Variables.integerValue;
-import static org.camunda.bpm.engine.variable.type.ValueType.INTEGER;
 
 @SpringBootApplication
 @Slf4j
@@ -44,13 +41,10 @@ public class ExternalTaskClientApplication {
 
   @Bean
   public ExternalTaskHandler externalTaskHandler() {
-
-
-
     return (task, service) -> {
       int square = Double.valueOf(pow(Integer.valueOf(task.getBusinessKey()).doubleValue(), 2)).intValue();
 
-      final VariableMap variables = Variables.putValueTyped("square", integerValue(square));
+      final VariableMap variables = Variables.putValueTyped("square", integerValue(square, false));
 
       log.info("completing task: {} {} {}", task.getId(), task.getBusinessKey(), variables);
       service.complete(task, variables);

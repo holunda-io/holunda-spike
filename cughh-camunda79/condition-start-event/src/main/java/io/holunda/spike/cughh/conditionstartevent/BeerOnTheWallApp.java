@@ -37,7 +37,7 @@ public class BeerOnTheWallApp {
         "ordernew.bpmn",
         Bpmn.createExecutableProcess("orderBeer")
           .startEvent().condition("${beers == 0}")
-          .serviceTask().camundaDelegateExpression("${orderBeerDelegate}").camundaAsyncBefore()
+          .serviceTask("service_orderBeer").name("Order Beer").camundaDelegateExpression("${orderBeerDelegate}").camundaAsyncBefore()
           .endEvent()
           .done()
       )
@@ -45,7 +45,7 @@ public class BeerOnTheWallApp {
         "takeone.bpmn",
         Bpmn.createExecutableProcess("drinkBeer")
           .startEvent().condition("${beers > 0}")
-          .serviceTask().camundaDelegateExpression("${drinkBeerDelegate}").camundaAsyncBefore()
+          .serviceTask("service_drinkBeer").name("Drink Beer").camundaDelegateExpression("${drinkBeerDelegate}").camundaAsyncBefore()
           .endEvent()
           .done()
       )
