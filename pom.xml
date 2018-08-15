@@ -22,6 +22,7 @@
     <module>lazy-dmn-evaluation</module>
     <module>cughh-camunda79</module>
     <module>test</module>
+    <module>custom-job-handler</module>
   </modules>
 
 
