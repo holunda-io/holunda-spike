@@ -1,0 +1,10 @@
+camunda:
+  bpm:
+    default-serialization-format: application/json
+    authorization:
+      enabled: true
+    history-level: activity
+    id-generator: simple
+    admin-user:
+      id: admin
+      password: admin
