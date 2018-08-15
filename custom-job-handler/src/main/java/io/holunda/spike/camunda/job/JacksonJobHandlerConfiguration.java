@@ -9,14 +9,14 @@ import org.camunda.bpm.engine.impl.jobexecutor.JobHandlerConfiguration;
  */
 public abstract class JacksonJobHandlerConfiguration implements JobHandlerConfiguration {
 
-    @JsonIgnore
-    private final JacksonJobHandlerConfigurationSerializer<JacksonJobHandlerConfiguration> serializer;
+  @JsonIgnore
+  private final JacksonJobHandlerConfigurationSerializer<JacksonJobHandlerConfiguration> serializer;
 
-    protected JacksonJobHandlerConfiguration(final ObjectMapper mapper) {
-        this.serializer = new JacksonJobHandlerConfigurationSerializer<>(mapper, JacksonJobHandlerConfiguration.class);
-    }
+  protected JacksonJobHandlerConfiguration(final ObjectMapper mapper) {
+    this.serializer = new JacksonJobHandlerConfigurationSerializer<>(mapper, JacksonJobHandlerConfiguration.class);
+  }
 
-    public String toCanonicalString() {
-        return serializer.toCanonicalString(this);
-    }
+  public String toCanonicalString() {
+    return serializer.toCanonicalString(this);
+  }
 }

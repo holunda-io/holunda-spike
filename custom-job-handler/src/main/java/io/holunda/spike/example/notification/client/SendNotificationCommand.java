@@ -8,22 +8,24 @@ import org.camunda.bpm.engine.impl.persistence.entity.MessageEntity;
 
 public class SendNotificationCommand implements Command<String> {
 
-    public static final String TYPE = "SendNotification";
-    private final NotificationJobHandlerConfiguration payload;
+  public static final String TYPE = "SendNotification";
+  private final NotificationJobHandlerConfiguration payload;
 
-    public SendNotificationCommand(final ObjectMapper mapper, final String recipient, final String subject, final String body) {
-        this.payload = new NotificationJobHandlerConfiguration(mapper, recipient, subject, body);
-    }
+  public SendNotificationCommand(final ObjectMapper mapper, final String recipient, final String subject, final String body) {
+    this.payload = new NotificationJobHandlerConfiguration(mapper, recipient, subject, body);
+  }
 
-    @Override
-    public String execute(final CommandContext commandContext) {
+  @Override
+  public String execute(final CommandContext commandContext) {
 
-        final MessageEntity entity = new MessageEntity();
+    final MessageEntity entity = new MessageEntity();
 
-        entity.init(commandContext);
-        entity.setJobHandlerType(TYPE);
-        entity.setJobHandlerConfiguration(payload);
+    entity.init(commandContext);
+    entity.setJobHandlerType(TYPE);
+    entity.setJobHandlerConfiguration(payload);
 
-        return entity.getId();
-    }
+    commandContext.getJobManager().send(entity);
+
+    return entity.getId();
+  }
 }

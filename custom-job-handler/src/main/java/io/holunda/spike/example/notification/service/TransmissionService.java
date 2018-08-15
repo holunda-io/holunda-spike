@@ -8,9 +8,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class TransmissionService {
 
-    private static final Logger logger = LoggerFactory.getLogger(TransmissionService.class);
+  private static final Logger logger = LoggerFactory.getLogger(TransmissionService.class);
 
-    public void transmitNotification(String recipient, String subject, String body) {
-        logger.info("Transmitting the message to {} with subject {} and body {}", recipient, subject, body);
-    }
+  public void transmitNotification(String recipient, String subject, String body) {
+    logger.info("Transmitting the message to '{}' with subject '{}' and body '{}'", recipient, subject, body);
+  }
 }
