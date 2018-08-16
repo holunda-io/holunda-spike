@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+  
+  <changeSet id="1_setup" author="jangalinski">
+    <sqlFile path="classpath:/org/camunda/bpm/engine/db/create/activiti.h2.create.engine.sql" relativeToChangelogFile="false" />
+    <sqlFile path="classpath:/org/camunda/bpm/engine/db/create/activiti.h2.create.history.sql" relativeToChangelogFile="false" />
+    <sqlFile path="classpath:/org/camunda/bpm/engine/db/create/activiti.h2.create.identity.sql" relativeToChangelogFile="false" />
+
+    <sqlFile path="classpath:/org/camunda/bpm/engine/db/create/activiti.h2.create.case.engine.sql" relativeToChangelogFile="false" />
+    <sqlFile path="classpath:/org/camunda/bpm/engine/db/create/activiti.h2.create.case.history.sql" relativeToChangelogFile="false" />
+
+    <sqlFile path="classpath:/org/camunda/bpm/engine/db/create/activiti.h2.create.case.engine.sql" relativeToChangelogFile="false" />
+    <sqlFile path="classpath:/org/camunda/bpm/engine/db/create/activiti.h2.create.case.history.sql" relativeToChangelogFile="false" />
+  </changeSet>
+</databaseChangeLog>

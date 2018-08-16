@@ -1,0 +1,9 @@
+spring:
+  liquibase:
+    enabled: true
+  jpa:
+    hibernate.ddl-auto: none
+camunda:
+  bpm:
+    database:
+      schema-update: false
