@@ -23,8 +23,8 @@
     <module>cughh-camunda79</module>
     <module>test</module>
     <module>taskview-with-variables</module>
+    <module>custom-job-handler</module>
   </modules>
-
 
   <properties>
     <project.github.organization>holunda</project.github.organization>
