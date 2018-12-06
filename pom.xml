@@ -21,10 +21,11 @@
     <module>dynamic-call-activity</module>
     <module>lazy-dmn-evaluation</module>
     <module>cughh-camunda79</module>
-    <module>test</module>
+    <module>cughh-camunda710</module>
     <module>taskview-with-variables</module>
     <module>custom-job-handler</module>
     <module>forum/task-delete-9302</module>
+    <module>test</module>
   </modules>
 
   <properties>
