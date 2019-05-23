@@ -26,6 +26,7 @@
     <module>custom-job-handler</module>
     <module>forum/task-delete-9302</module>
     <module>test</module>
+    <module>callactivity-local-variable-mapping</module>
   </modules>
 
   <properties>
