@@ -35,7 +35,7 @@
         <bpmn2:incoming>SequenceFlow_1x8iqxn</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_0c005mo</bpmn2:outgoing>
       </bpmn2:intermediateThrowEvent>
-      <bpmn2:exclusiveGateway id="ExclusiveGateway_07esgjg" name="Is &#39;result&#39; set as local variable?">
+      <bpmn2:exclusiveGateway id="ExclusiveGateway_07esgjg" name="Is &#39;result&#39; set as local variable?" default="SequenceFlow_1x8iqxn">
         <bpmn2:incoming>SequenceFlow_1dyzz21</bpmn2:incoming>
         <bpmn2:outgoing>SequenceFlow_0ngoth3</bpmn2:outgoing>
         <bpmn2:outgoing>SequenceFlow_1x8iqxn</bpmn2:outgoing>
