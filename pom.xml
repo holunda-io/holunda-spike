@@ -27,14 +27,20 @@
     <module>forum/task-delete-9302</module>
     <module>test</module>
     <module>callactivity-local-variable-mapping</module>
+    <module>concurrent-messaging</module>
   </modules>
 
   <properties>
     <project.github.organization>holunda</project.github.organization>
     <project.github.repository>holunda-spike</project.github.repository>
 
-    <camunda-custom-batch.version>1.1.0</camunda-custom-batch.version>
-    <camunda-springboot.version>2.3.0</camunda-springboot.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <java.version>1.8</java.version>
+    <version.java>${java.version}</version.java>
+    <maven.compiler.source>${java.version}</maven.compiler.source>
+    <maven.compiler.target>${java.version}</maven.compiler.target>
+
   </properties>
 
   <dependencies>

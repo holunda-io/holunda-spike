@@ -1,0 +1,8 @@
+# For a quick start check out our HTTP Requests collection (Tools|HTTP Client|Open HTTP Requests Collection) or
+# paste cURL into the file and request will be converted to HTTP Request format.
+#
+
+POST http://localhost:8082/order
+Content-Type: application/json
+
+###

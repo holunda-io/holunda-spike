@@ -1,0 +1,24 @@
+spring:
+  jpa:
+    open-in-view: true
+camunda:
+  bpm:
+    admin-user:
+      id: admin
+      password: admin
+      email: adminus@adminius.io
+      first-name: Adminus
+      last-name: Administratius
+    filter:
+      create: true
+server:
+  port: 8081
+feign:
+  client:
+    config:
+      remoteRuntimeService:
+        url: "http://localhost:8082/rest/engine/default/"
+
+logging:
+  level:
+    io.holunda.camunda.concurrent.inventory.RuntimeServiceClient: DEBUG

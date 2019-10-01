@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_0u4d5e7" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="3.3.4">
+  <bpmn:collaboration id="Collaboration_12yvhey">
+    <bpmn:participant id="order_process" name="Order" processRef="process_order_1" />
+    <bpmn:participant id="inventory_service" name="Inventory Service" />
+    <bpmn:messageFlow id="MessageFlow_1hpqjhm" sourceRef="send_ship_goods" targetRef="inventory_service" />
+    <bpmn:messageFlow id="MessageFlow_1xsv5un" sourceRef="inventory_service" targetRef="receive_goods_shipped" />
+  </bpmn:collaboration>
+  <bpmn:process id="process_order_1" name="Order Process" isExecutable="true" camunda:historyTimeToLive="P1D">
+    <bpmn:startEvent id="started" name="Order created" camunda:asyncAfter="true">
+      <bpmn:extensionElements>
+        <camunda:executionListener delegateExpression="${ loggingListener }" event="start" />
+      </bpmn:extensionElements>
+      <bpmn:outgoing>SequenceFlow_06ztma3</bpmn:outgoing>
+      <bpmn:messageEventDefinition messageRef="Message_1n9dups" />
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_06ztma3" sourceRef="started" targetRef="send_ship_goods" />
+    <bpmn:sequenceFlow id="SequenceFlow_14a8y7c" sourceRef="send_ship_goods" targetRef="receive_goods_shipped" />
+    <bpmn:sequenceFlow id="SequenceFlow_0rx6dge" sourceRef="receive_goods_shipped" targetRef="ended" />
+    <bpmn:sendTask id="send_ship_goods" name="Ship&#10;goods" camunda:type="external" camunda:topic="ship_goods">
+      <bpmn:extensionElements>
+        <camunda:executionListener delegateExpression="${ loggingListener }" event="start" />
+        <camunda:executionListener delegateExpression="${ loggingListener }" event="end" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_06ztma3</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_14a8y7c</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:endEvent id="ended" name="Order delivered">
+      <bpmn:extensionElements>
+        <camunda:executionListener delegateExpression="${ loggingListener }" event="end" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0rx6dge</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:intermediateCatchEvent id="receive_goods_shipped" name="Goods&#10;shipped">
+      <bpmn:extensionElements>
+        <camunda:executionListener delegateExpression="${ loggingListener }" event="start" />
+        <camunda:executionListener delegateExpression="${ loggingListener }" event="end" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_14a8y7c</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0rx6dge</bpmn:outgoing>
+      <bpmn:messageEventDefinition messageRef="Message_188rkxf" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:textAnnotation id="TextAnnotation_0gfbk7u">
+      <bpmn:text>async after</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_1owsizn" sourceRef="started" targetRef="TextAnnotation_0gfbk7u" />
+  </bpmn:process>
+  <bpmn:message id="Message_1n9dups" name="order_created" />
+  <bpmn:message id="Message_188rkxf" name="goods_shipped" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_12yvhey">
+      <bpmndi:BPMNShape id="Participant_1lwg1ig_di" bpmnElement="order_process" isHorizontal="true">
+        <dc:Bounds x="160" y="59" width="520" height="251" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_11w0pnh_di" bpmnElement="started">
+        <dc:Bounds x="229" y="162" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="213" y="205" width="68" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_0gfbk7u_di" bpmnElement="TextAnnotation_0gfbk7u">
+        <dc:Bounds x="270" y="260" width="100" height="30" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_1owsizn_di" bpmnElement="Association_1owsizn">
+        <di:waypoint x="258" y="194" />
+        <di:waypoint x="308" y="260" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_06ztma3_di" bpmnElement="SequenceFlow_06ztma3">
+        <di:waypoint x="265" y="180" />
+        <di:waypoint x="330" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="SendTask_1umyvd9_di" bpmnElement="send_ship_goods">
+        <dc:Bounds x="330" y="140" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_14a8y7c_di" bpmnElement="SequenceFlow_14a8y7c">
+        <di:waypoint x="430" y="180" />
+        <di:waypoint x="492" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0rx6dge_di" bpmnElement="SequenceFlow_0rx6dge">
+        <di:waypoint x="528" y="180" />
+        <di:waypoint x="592" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EndEvent_0g2k6uo_di" bpmnElement="ended">
+        <dc:Bounds x="592" y="162" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="572" y="205" width="76" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="IntermediateCatchEvent_1lo2jwo_di" bpmnElement="receive_goods_shipped">
+        <dc:Bounds x="492" y="162" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="490" y="124.5" width="39" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Participant_0d3t63e_di" bpmnElement="inventory_service" isHorizontal="true">
+        <dc:Bounds x="160" y="400" width="520" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="MessageFlow_1hpqjhm_di" bpmnElement="MessageFlow_1hpqjhm">
+        <di:waypoint x="380" y="220" />
+        <di:waypoint x="380" y="400" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="MessageFlow_1xsv5un_di" bpmnElement="MessageFlow_1xsv5un">
+        <di:waypoint x="510" y="400" />
+        <di:waypoint x="510" y="198" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
