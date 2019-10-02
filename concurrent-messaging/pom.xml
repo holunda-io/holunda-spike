@@ -20,7 +20,7 @@
   <properties>
     <springboot.version>2.1.5.RELEASE</springboot.version>
     <spring-cloud.version>Greenwich.SR2</spring-cloud.version>
-    <camunda.version>7.11.1-ee</camunda.version>
+
     <camunda-external-client.version>1.2.2</camunda-external-client.version>
     <camunda-spring-boot.version>3.3.1</camunda-spring-boot.version>
     <groovy.version>2.4.5</groovy.version>
@@ -86,11 +86,6 @@
     <dependency>
       <groupId>org.camunda.bpm.springboot</groupId>
       <artifactId>camunda-bpm-spring-boot-starter-rest</artifactId>
-      <version>${camunda-spring-boot.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.camunda.bpm.springboot</groupId>
-      <artifactId>camunda-bpm-spring-boot-starter-webapp-ee</artifactId>
       <version>${camunda-spring-boot.version}</version>
     </dependency>
     <dependency>
@@ -292,6 +287,7 @@
         <plugin>
           <groupId>org.springframework.boot</groupId>
           <artifactId>spring-boot-maven-plugin</artifactId>
+          <version>${springboot.version}</version>
           <executions>
             <execution>
               <goals>
@@ -304,4 +300,37 @@
       </plugins>
     </pluginManagement>
   </build>
+
+  <profiles>
+    <profile>
+      <id>camunda-ce</id>
+      <activation>
+        <property>
+          <name>!camunda-ee</name>
+        </property>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>org.camunda.bpm.springboot</groupId>
+          <artifactId>camunda-bpm-spring-boot-starter-webapp</artifactId>
+          <version>${camunda-spring-boot.version}</version>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>camunda-ee</id>
+      <activation>
+        <property>
+          <name>camunda-ee</name>
+        </property>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>org.camunda.bpm.springboot</groupId>
+          <artifactId>camunda-bpm-spring-boot-starter-webapp-ee</artifactId>
+          <version>${camunda-spring-boot.version}</version>
+        </dependency>
+      </dependencies>
+    </profile>
+  </profiles>
 </project>

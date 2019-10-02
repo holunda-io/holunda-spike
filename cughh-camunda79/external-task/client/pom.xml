@@ -10,6 +10,7 @@
   </parent>
 
   <artifactId>external-task-client</artifactId>
+  <name>cughh-camunda79/external-task/client</name>
 
   <dependencies>
     <dependency>

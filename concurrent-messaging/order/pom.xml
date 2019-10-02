@@ -11,6 +11,7 @@
 
   <artifactId>order</artifactId>
   <packaging>jar</packaging>
+  <name>concurrent-messaging/${artifactId}</name>
 
 
   <build>
