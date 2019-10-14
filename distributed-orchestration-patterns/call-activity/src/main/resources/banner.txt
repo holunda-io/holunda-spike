@@ -1,0 +1,7 @@
+====================================
+  Local Call Activity Example
+====================================
+
+  Spring-Boot: ${spring-boot.version}
+  Camunda BPM: ${camunda.bpm.version}
+  Listening  : ${server.port}

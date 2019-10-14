@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_0gcrzqh" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="3.3.4">
+  <bpmn:collaboration id="Collaboration_0mu4h5z">
+    <bpmn:participant id="Participant_07ekqdo" name="Order Management" processRef="process_order_management" />
+    <bpmn:participant id="Participant_0q3kufd" name="Inventory check" processRef="process_inventory_check" />
+    <bpmn:participant id="Participant_1frzafl" name="Payment" processRef="process_payment" />
+    <bpmn:participant id="Participant_1ju5jr9" name="Delivery" processRef="process_delivery" />
+  </bpmn:collaboration>
+  <bpmn:process id="process_order_management" isExecutable="true">
+    <bpmn:sequenceFlow id="SequenceFlow_1elm6k6" sourceRef="BoundaryEvent_0cqilq1" targetRef="abort_not_fulfilled" />
+    <bpmn:sequenceFlow id="SequenceFlow_0lhvtfj" sourceRef="BoundaryEvent_1u8qip7" targetRef="abort_cancelled" />
+    <bpmn:callActivity id="call_inventory_check" name="Inventory&#10;check" calledElement="process_inventory_check">
+      <bpmn:extensionElements>
+        <camunda:in businessKey="#{execution.processBusinessKey}" />
+        <camunda:in variables="all" />
+        <camunda:out variables="all" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_1hvvtqf</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0yv3v7w</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:callActivity id="call_payment" name="Payment" calledElement="process_payment">
+      <bpmn:extensionElements>
+        <camunda:in variables="all" />
+        <camunda:out variables="all" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0yv3v7w</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0hftf2n</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:callActivity id="call_delivery" name="Delivery" calledElement="process_delivery">
+      <bpmn:extensionElements>
+        <camunda:in variables="all" />
+        <camunda:out variables="all" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0hftf2n</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_192ho8t</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:endEvent id="end" name="Order shipped">
+      <bpmn:extensionElements>
+        <camunda:executionListener delegateExpression="${ loggingListener }" event="end" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_192ho8t</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:boundaryEvent id="BoundaryEvent_0cqilq1" name="no goods available" attachedToRef="call_inventory_check">
+      <bpmn:outgoing>SequenceFlow_1elm6k6</bpmn:outgoing>
+      <bpmn:errorEventDefinition errorRef="Error_1tnsfmi" />
+    </bpmn:boundaryEvent>
+    <bpmn:boundaryEvent id="BoundaryEvent_1u8qip7" name="payment&#10;expired" attachedToRef="call_payment">
+      <bpmn:outgoing>SequenceFlow_0lhvtfj</bpmn:outgoing>
+      <bpmn:timerEventDefinition>
+        <bpmn:timeDate xsi:type="bpmn:tFormalExpression">${ PAYMENT_TIMEOUT }</bpmn:timeDate>
+      </bpmn:timerEventDefinition>
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1hvvtqf" sourceRef="start" targetRef="call_inventory_check" />
+    <bpmn:sequenceFlow id="SequenceFlow_0yv3v7w" sourceRef="call_inventory_check" targetRef="call_payment" />
+    <bpmn:sequenceFlow id="SequenceFlow_0hftf2n" sourceRef="call_payment" targetRef="call_delivery" />
+    <bpmn:sequenceFlow id="SequenceFlow_192ho8t" sourceRef="call_delivery" targetRef="end" />
+    <bpmn:endEvent id="abort_not_fulfilled" name="Order not fulfilled">
+      <bpmn:extensionElements>
+        <camunda:executionListener delegateExpression="${ loggingListener }" event="start" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_1elm6k6</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="abort_cancelled" name="Order cancelled">
+      <bpmn:extensionElements>
+        <camunda:executionListener delegateExpression="${ loggingListener }" event="start" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0lhvtfj</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:startEvent id="start" name="Order created">
+      <bpmn:extensionElements>
+        <camunda:executionListener delegateExpression="${ paymentStartListener }" event="start" />
+      </bpmn:extensionElements>
+      <bpmn:outgoing>SequenceFlow_1hvvtqf</bpmn:outgoing>
+    </bpmn:startEvent>
+  </bpmn:process>
+  <bpmn:process id="process_inventory_check" isExecutable="true">
+    <bpmn:startEvent id="inv_start">
+      <bpmn:outgoing>SequenceFlow_01gtwbf</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_01gtwbf" sourceRef="inv_start" targetRef="service_inventory_check" />
+    <bpmn:serviceTask id="service_inventory_check" name="Check&#10;inventory" camunda:delegateExpression="${ checkInventoryDelegate }">
+      <bpmn:incoming>SequenceFlow_01gtwbf</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_10ufd50</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_10ufd50" sourceRef="service_inventory_check" targetRef="xor_goods_available" />
+    <bpmn:sequenceFlow id="SequenceFlow_13d2l18" name="yes" sourceRef="xor_goods_available" targetRef="inv_end">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${ GOODS_AVAILABLE }</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:endEvent id="inv_end">
+      <bpmn:incoming>SequenceFlow_13d2l18</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:exclusiveGateway id="xor_goods_available" name="Goods&#10;available?" default="SequenceFlow_1rz93rf">
+      <bpmn:incoming>SequenceFlow_10ufd50</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_13d2l18</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_1rz93rf</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_1rz93rf" name="no" sourceRef="xor_goods_available" targetRef="inv_no_goods_end" />
+    <bpmn:endEvent id="inv_no_goods_end">
+      <bpmn:incoming>SequenceFlow_1rz93rf</bpmn:incoming>
+      <bpmn:errorEventDefinition errorRef="Error_1tnsfmi" />
+    </bpmn:endEvent>
+  </bpmn:process>
+  <bpmn:process id="process_payment" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_0uwf3q5">
+      <bpmn:outgoing>SequenceFlow_00amewf</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_00amewf" sourceRef="StartEvent_0uwf3q5" targetRef="user_select_payment" />
+    <bpmn:sequenceFlow id="SequenceFlow_1evi7ka" sourceRef="user_select_payment" targetRef="Task_0ham4vd" />
+    <bpmn:userTask id="user_select_payment" name="Provide &#10;payment&#10;information">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="PAYMENT_TYPE" label="PaymentType" type="enum" defaultValue="CC">
+            <camunda:value id="CC" name="Credit Card" />
+            <camunda:value id="TRANSFER" name="Bank Transfer" />
+            <camunda:value id="PAYPAL" name="Paypal" />
+          </camunda:formField>
+        </camunda:formData>
+        <camunda:taskListener delegateExpression="${ taskIdRevealingTaskListener }" event="create" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_00amewf</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1evi7ka</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="EndEvent_0tg4k9a">
+      <bpmn:incoming>SequenceFlow_1jery0i</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1jery0i" sourceRef="Task_0ham4vd" targetRef="EndEvent_0tg4k9a" />
+    <bpmn:serviceTask id="Task_0ham4vd" name="Execute &#10;payment" camunda:delegateExpression="${ executePaymentDelegate }">
+      <bpmn:incoming>SequenceFlow_1evi7ka</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1jery0i</bpmn:outgoing>
+    </bpmn:serviceTask>
+  </bpmn:process>
+  <bpmn:process id="process_delivery" isExecutable="true">
+    <bpmn:startEvent id="del_start">
+      <bpmn:outgoing>SequenceFlow_1tx8if7</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1tx8if7" sourceRef="del_start" targetRef="service_deliver_goods" />
+    <bpmn:endEvent id="del_end">
+      <bpmn:incoming>SequenceFlow_0gj8kbb</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0gj8kbb" sourceRef="service_deliver_goods" targetRef="del_end" />
+    <bpmn:serviceTask id="service_deliver_goods" name="Deliver&#10;goods" camunda:delegateExpression="${ deliverGoodsDelegate }">
+      <bpmn:incoming>SequenceFlow_1tx8if7</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0gj8kbb</bpmn:outgoing>
+    </bpmn:serviceTask>
+  </bpmn:process>
+  <bpmn:error id="Error_1tnsfmi" name="noGoodsAvailable" errorCode="NO_GOODS_AVAILABLE" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0mu4h5z">
+      <bpmndi:BPMNShape id="Participant_07ekqdo_di" bpmnElement="Participant_07ekqdo" isHorizontal="true">
+        <dc:Bounds x="160" y="52" width="1010" height="257" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1hvvtqf_di" bpmnElement="SequenceFlow_1hvvtqf">
+        <di:waypoint x="258" y="140" />
+        <di:waypoint x="360" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0yv3v7w_di" bpmnElement="SequenceFlow_0yv3v7w">
+        <di:waypoint x="460" y="140" />
+        <di:waypoint x="590" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0hftf2n_di" bpmnElement="SequenceFlow_0hftf2n">
+        <di:waypoint x="690" y="140" />
+        <di:waypoint x="820" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EndEvent_048haxm_di" bpmnElement="end">
+        <dc:Bounds x="1022" y="122" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1005" y="165" width="70" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_192ho8t_di" bpmnElement="SequenceFlow_192ho8t">
+        <di:waypoint x="920" y="140" />
+        <di:waypoint x="1022" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="CallActivity_0ufzune_di" bpmnElement="call_inventory_check">
+        <dc:Bounds x="360" y="100" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CallActivity_0oenkji_di" bpmnElement="call_payment">
+        <dc:Bounds x="590" y="100" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CallActivity_07kqase_di" bpmnElement="call_delivery">
+        <dc:Bounds x="820" y="100" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_079m4iz_di" bpmnElement="abort_not_fulfilled">
+        <dc:Bounds x="512" y="232" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="488" y="275" width="84" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1elm6k6_di" bpmnElement="SequenceFlow_1elm6k6">
+        <di:waypoint x="440" y="198" />
+        <di:waypoint x="440" y="250" />
+        <di:waypoint x="512" y="250" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="BoundaryEvent_0u92210_di" bpmnElement="BoundaryEvent_0cqilq1">
+        <dc:Bounds x="422" y="162" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="387" y="205" width="46" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_0o2ahwc_di" bpmnElement="BoundaryEvent_1u8qip7">
+        <dc:Bounds x="652" y="162" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="618" y="205" width="43" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_1sp9x52_di" bpmnElement="abort_cancelled">
+        <dc:Bounds x="742" y="232" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="722" y="275" width="78" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0lhvtfj_di" bpmnElement="SequenceFlow_0lhvtfj">
+        <di:waypoint x="670" y="198" />
+        <di:waypoint x="670" y="250" />
+        <di:waypoint x="742" y="250" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Participant_1t61hfa_di" bpmnElement="Participant_0q3kufd" isHorizontal="true">
+        <dc:Bounds x="160" y="330" width="610" height="290" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Participant_11jpxfe_di" bpmnElement="Participant_1frzafl" isHorizontal="true">
+        <dc:Bounds x="160" y="640" width="610" height="250" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Participant_0zu9gel_di" bpmnElement="Participant_1ju5jr9" isHorizontal="true">
+        <dc:Bounds x="800" y="330" width="370" height="290" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_0o1rc2a_di" bpmnElement="inv_start">
+        <dc:Bounds x="212" y="442" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_01gtwbf_di" bpmnElement="SequenceFlow_01gtwbf">
+        <di:waypoint x="248" y="460" />
+        <di:waypoint x="310" y="460" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_0flrtfi_di" bpmnElement="service_inventory_check">
+        <dc:Bounds x="310" y="420" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ExclusiveGateway_05f66gu_di" bpmnElement="xor_goods_available" isMarkerVisible="true">
+        <dc:Bounds x="515" y="435" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="515" y="398" width="50" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_10ufd50_di" bpmnElement="SequenceFlow_10ufd50">
+        <di:waypoint x="410" y="460" />
+        <di:waypoint x="515" y="460" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_13d2l18_di" bpmnElement="SequenceFlow_13d2l18">
+        <di:waypoint x="565" y="460" />
+        <di:waypoint x="672" y="460" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="610" y="442" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EndEvent_1cfdpal_di" bpmnElement="inv_end">
+        <dc:Bounds x="672" y="442" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1rz93rf_di" bpmnElement="SequenceFlow_1rz93rf">
+        <di:waypoint x="540" y="485" />
+        <di:waypoint x="540" y="540" />
+        <di:waypoint x="672" y="540" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="549" y="510" width="13" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EndEvent_1qqwvdm_di" bpmnElement="inv_no_goods_end">
+        <dc:Bounds x="672" y="522" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_0xpskj1_di" bpmnElement="del_start">
+        <dc:Bounds x="852" y="442" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1tx8if7_di" bpmnElement="SequenceFlow_1tx8if7">
+        <di:waypoint x="888" y="460" />
+        <di:waypoint x="940" y="460" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EndEvent_0oxp1k5_di" bpmnElement="del_end">
+        <dc:Bounds x="1092" y="442" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0gj8kbb_di" bpmnElement="SequenceFlow_0gj8kbb">
+        <di:waypoint x="1040" y="460" />
+        <di:waypoint x="1092" y="460" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_1mk2iri_di" bpmnElement="service_deliver_goods">
+        <dc:Bounds x="940" y="420" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_0uwf3q5_di" bpmnElement="StartEvent_0uwf3q5">
+        <dc:Bounds x="222" y="742" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_00amewf_di" bpmnElement="SequenceFlow_00amewf">
+        <di:waypoint x="258" y="760" />
+        <di:waypoint x="340" y="760" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EndEvent_0tg4k9a_di" bpmnElement="EndEvent_0tg4k9a">
+        <dc:Bounds x="652" y="742" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1evi7ka_di" bpmnElement="SequenceFlow_1evi7ka">
+        <di:waypoint x="440" y="760" />
+        <di:waypoint x="500" y="760" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_14m5h84_di" bpmnElement="user_select_payment">
+        <dc:Bounds x="340" y="720" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1jery0i_di" bpmnElement="SequenceFlow_1jery0i">
+        <di:waypoint x="600" y="760" />
+        <di:waypoint x="652" y="760" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_09k4mt0_di" bpmnElement="Task_0ham4vd">
+        <dc:Bounds x="500" y="720" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_0ma45k6_di" bpmnElement="start">
+        <dc:Bounds x="222" y="122" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="206" y="165" width="68" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

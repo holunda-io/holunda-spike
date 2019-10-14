@@ -4,6 +4,7 @@ import mu.KLogging
 import org.camunda.bpm.client.ExternalTaskClient
 import org.camunda.bpm.client.task.ExternalTask
 import org.camunda.bpm.client.task.ExternalTaskService
+import org.camunda.bpm.client.task.impl.ExternalTaskImpl
 import org.camunda.bpm.engine.RuntimeService
 import org.camunda.bpm.engine.delegate.JavaDelegate
 import org.camunda.bpm.engine.variable.Variables
@@ -11,7 +12,6 @@ import org.camunda.bpm.engine.variable.Variables.createVariables
 import org.camunda.bpm.engine.variable.value.StringValue
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Component
-import java.util.concurrent.ConcurrentHashMap
 import javax.annotation.PostConstruct
 
 @Component
@@ -23,7 +23,6 @@ class ShipGoodsWorker(
 
   companion object : KLogging()
 
-  private val externalTasks = ConcurrentHashMap<String, ExternalTask>()
   private lateinit var externalTaskService: ExternalTaskService
 
   @PostConstruct
@@ -43,16 +42,14 @@ class ShipGoodsWorker(
           val orderId: String = externalTask.getVariableTyped<StringValue>("ORDER_ID").value
 
           logger.info { "Processing order $orderId." }
-          val running = runtimeService.createProcessInstanceQuery().processInstanceBusinessKeyLike(businessKey).active().list()
+          val running = runtimeService.createProcessInstanceQuery().processInstanceBusinessKeyLike(businessKey).list()
           if (running.isEmpty()) {
             val instance = runtimeService.startProcessInstanceByMessage("ship_goods", businessKey,
               createVariables()
                 .putValueTyped("ORDER_ID", Variables.stringValue(orderId))
+                .putValueTyped("EXTERNAL_TASK_ID", Variables.stringValue(externalTask.id))
             )
-            // store for later
-            externalTasks[instance.id] = externalTask
           }
-
         } catch (e: Exception) {
           handleFailure(externalTask, e)
         }
@@ -62,7 +59,11 @@ class ShipGoodsWorker(
 
   fun complete() = JavaDelegate {
     logger.info { "Process started, completing external task for order ${it.processBusinessKey}." }
-    val externalTask = externalTasks[it.processInstanceId] ?: throw IllegalStateException("Task for order ${it.processBusinessKey} not found.")
+
+    // create an empty task POJO holding the id for completion.
+    val externalTask: ExternalTask = ExternalTaskImpl().apply {
+      id = it.getVariableTyped<StringValue>("EXTERNAL_TASK_ID").value
+    }
     try {
       externalTaskService.complete(externalTask)
     } catch (e: Exception) {

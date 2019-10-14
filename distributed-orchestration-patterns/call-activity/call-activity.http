@@ -1,0 +1,9 @@
+
+## This order will get the positive inventory answer
+
+POST http://localhost:8082/call-activities/start/08989984271
+
+### Copy task id from the console and submit it
+
+POST http://localhost:8082/call-activities/payment/75535026-eebb-11e9-8092-0242f064bdb4
+

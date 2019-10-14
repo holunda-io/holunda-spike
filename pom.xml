@@ -28,6 +28,7 @@
     <module>test</module>
     <module>callactivity-local-variable-mapping</module>
     <module>concurrent-messaging</module>
+    <module>distributed-orchestration-patterns</module>
   </modules>
 
   <properties>
