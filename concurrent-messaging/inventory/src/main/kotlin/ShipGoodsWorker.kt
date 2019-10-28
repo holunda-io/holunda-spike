@@ -13,11 +13,10 @@ import org.camunda.bpm.engine.variable.value.StringValue
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Component
 import javax.annotation.PostConstruct
-
 @Component
 class ShipGoodsWorker(
   val externalTaskClient: ExternalTaskClient,
-  @Qualifier("local") val runtimeService: RuntimeService,
+  /*@Qualifier("local")*/ val runtimeService: RuntimeService,
   val shipGoodsWorkerProperties: ShipGoodsWorkerProperties
 ) {
 

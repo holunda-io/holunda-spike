@@ -43,6 +43,7 @@ class CallActivityExampleApplication {
    */
   @Bean
   fun checkInventoryDelegate() = JavaDelegate {
+    it.parentId
     val orderId = it.getVariableTyped<StringValue>("ORDER_ID").value
     it.setVariable("GOODS_AVAILABLE", booleanValue(orderId.contains("1")))
   }

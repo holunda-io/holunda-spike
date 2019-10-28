@@ -29,6 +29,7 @@
     <module>callactivity-local-variable-mapping</module>
     <module>concurrent-messaging</module>
     <module>distributed-orchestration-patterns</module>
+    <module>advanced-external-task-client</module>
   </modules>
 
   <properties>

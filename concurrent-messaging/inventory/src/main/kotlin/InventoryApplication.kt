@@ -59,7 +59,7 @@ class InventoryApplication {
     it.setVariable("SHIPMENT_ID", stringValue(shipmentId))
   }
 
-  @Bean
+  @Bean("checkInventoryDelegate")
   fun checkInventoryDelegate() = JavaDelegate {
     logger.info { "Shipment checked in inventory." }
   }
@@ -78,12 +78,12 @@ class InventoryApplication {
     )
   }
 
-
+/*
   @Bean
   @Qualifier("local")
   fun runtimeServiceLocal(processEngine: ProcessEngine) = processEngine.runtimeService
 
-
+*/
   @Bean
   fun feignLoggerLevel(): Logger.Level = Logger.Level.FULL
 }
